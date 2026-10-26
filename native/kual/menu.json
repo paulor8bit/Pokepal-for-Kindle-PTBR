@@ -1,5 +1,5 @@
 {
-  "items": [{"name": "PokePal", "priority": 0, "items": [
-    {"name": "Play PokePal", "action": "sh ./launch.sh", "exitmenu": true}
+  "items": [{"name": "PokeK PT-BR", "priority": 0, "items": [
+    {"name": "Jogar PokeK", "action": "sh ./launch.sh", "exitmenu": true}
   ]}]
 }

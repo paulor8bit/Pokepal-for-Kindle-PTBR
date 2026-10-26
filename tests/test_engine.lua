@@ -138,14 +138,14 @@ test("starter families have usable moves with enforced unlocks",function()
    s.species=member;assert(E.moves(s)[2].name==moves[2].name)
   end
  end
- assert(E.moves({species=152})[2].name=="Razor Leaf")
- assert(E.moves({species=155})[2].name=="Ember")
- assert(E.moves({species=158})[2].name=="Water Gun")
+ assert(E.moves({species=152})[2].name=="Folha Navalha")
+ assert(E.moves({species=155})[2].name=="Brasa")
+ assert(E.moves({species=158})[2].name=="Jato de Água")
 end)
 test("move training honors level unlocks",function()
- local s=pet(4);E.act(s,"train","Ember",now);assert(s.xp==0 and s.trained==0)
- s.xp=120;E.act(s,"train","Ember",now);assert(s.xp==132)
- local xp=s.xp;E.act(s,"train","Flamethrower",now+3600);assert(s.xp==xp)
+ local s=pet(4);E.act(s,"train","Brasa",now);assert(s.xp==0 and s.trained==0)
+ s.xp=120;E.act(s,"train","Brasa",now);assert(s.xp==132)
+ local xp=s.xp;E.act(s,"train","Lança-chamas",now+3600);assert(s.xp==xp)
 end)
 test("cleaning has no unlimited bond reward",function()
  local s=pet();s.dirt=30;E.act(s,"clean",nil,now);local b=s.bond
@@ -224,14 +224,14 @@ test("all 160 Pokemon can be chosen initially or switched to without losing prog
  for id=1,160 do
   local first=pet(id);assert(first.species==id and E.valid(first))
   assert(S.decode(S.encode(first),E).species==id)
-  local s=pet(4);s.xp=300;s.bond=40;E.act(s,'nickname','Ember',now)
+  local s=pet(4);s.xp=300;s.bond=40;E.act(s,'nickname',"Brasa",now)
   local berries,started,gift=s.berries,s.started,s.gift
   E.act(s,'partner',id,now)
   assert(s.species==id and s.seen[tostring(id)] and E.valid(s))
   assert(s.berries==berries and s.started==started and s.gift==gift)
   if id~=4 then assert(s.xp==0 and s.bond==0) end
   s=S.decode(S.encode(s),E);assert(s and s.species==id)
-  E.act(s,'partner',4,now);assert(s.xp==300 and s.bond==40 and E.displayName(s)=='Ember')
+  E.act(s,'partner',4,now);assert(s.xp==300 and s.bond==40 and E.displayName(s)=="Brasa")
  end
  local s=pet(4);local before=S.encode(s)
  for _,id in ipairs({0,161,1.5,'25',{}}) do

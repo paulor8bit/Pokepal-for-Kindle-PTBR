@@ -52,11 +52,11 @@ local state=session.state or E.new(os.time());local notice=session.notice
 local owner={savepath=savepath,backups=backups,native=true}
 function owner:onPetClosed() self:cancelReadingScan();if session then session.close();session=nil end end
 function owner:save()
- if backups.blocked then return nil,'Reopen PokePal to finish restoring.' end
+ if backups.blocked then return nil,"Reabra o PokeK para concluir a restauração." end
  local ok,err=S.save(savepath,state,E,host_sync_file,host_sync_directory)
  self.save_error=not ok
  if not ok then
-  io.stderr:write('Save failed: '..tostring(err)..'\n')
+  io.stderr:write("Falha ao salvar: "..tostring(err)..'\n')
  end
  return ok,err
 end
@@ -69,8 +69,8 @@ function owner:finishReadingScan(counters,status,visit)
  if counters then R.saveCache() end
  local ko,problem,primary,days=R.counter(savepath..'.reading')
  local f=io.open(savepath..'.reading','rb');if f then f:close() end
- self.reading_status={status,problem and 'KOReader: reading data unavailable'
-  or (f and 'KOReader: reading time available' or 'KOReader: open PokePal there once')}
+ self.reading_status={status,problem and "KOReader: dados de leitura indisponíveis"
+  or (f and "KOReader: tempo de leitura disponível" or "KOReader: abra o PokeK nele uma vez")}
  local message,recap=R.collect(state,E,counters,ko,os.time(),days,visit)
  if recap then self.recap=recap end
  return message

@@ -1,79 +1,57 @@
-POKEPAL 1.0.8
+POKEK PT-BR — base PokePal 1.0.8
 
 KUAL
-Needs a jailbroken touchscreen Kindle with KUAL installed.
-
-1. Unzip PokePal-v1.0.8-kual.zip.
-2. Copy extensions onto your Kindle drive, next to documents.
-   Merge folders if asked.
-3. Eject, then open KUAL > PokePal > Play PokePal.
-
-KOReader is not required for this version.
+Requer Kindle com touchscreen, jailbreak e KUAL.
+1. Extraia PokeK-PTBR-v1.0.8-kual.zip.
+2. Copie extensions para a raiz do Kindle, ao lado de documents.
+3. Mescle as pastas, ejete e abra KUAL > PokeK PT-BR > Jogar PokeK.
+Não requer KOReader.
 
 KOREADER
-Needs KOReader installed on your Kindle.
-
-1. Unzip PokePal-v1.0.8-koreader.zip.
-2. Copy koreader onto your Kindle drive. Merge with the existing folder.
-3. Restart KOReader. Open Tools > More tools > PokePal.
+Requer KOReader instalado.
+1. Extraia PokeK-PTBR-v1.0.8-koreader.zip.
+2. Copie koreader para a raiz do Kindle, mesclando a pasta existente.
+3. Reinicie e abra Ferramentas > Mais ferramentas > PokeK - Companheiro Pokémon.
+O idioma dos menus do KOReader depende da configuração do leitor.
+Se não aparecer, ative o plugin no gerenciamento de plugins e reinicie.
 
 SAVES
-Both editions use pokepal/pokepal.dat on the Kindle drive.
-Back up the whole pokepal folder before updating. Keep it when replacing
-the app files. Update both editions if you use both.
+As duas versões usam /mnt/us/pokepal/pokepal.dat.
+Faça uma cópia de toda a pasta pokepal antes de atualizar.
+Mantenha os nomes técnicos das pastas para preservar a compatibilidade.
+Feche uma versão antes de abrir a outra. Atualize ambas se usar as duas.
+Saves antigos são copiados na primeira abertura; os originais são mantidos.
+Mais > Backups guarda o jogo e os registros de leitura juntos.
+Confira a Prévia antes de restaurar. Seu jogo atual fica em Antes da restauração.
+Se uma restauração parar, feche e reabra o jogo para concluir.
 
-Older saves are copied across on first launch; the originals are kept.
-If both editions had separate saves, the most recently used one is chosen.
-The old locations are extensions/pokepal/data and KOReader's settings folder.
-Close the other copy before opening PokePal in a different reader.
+COMO JOGAR
+Alimente, brinque, treine, descanse e limpe na tela inicial.
+A cesta é reabastecida a cada 24 horas.
+Perfil permite trocar de parceiro e escolher um apelido.
+Cada amigo mantém XP, vínculo e apelido.
+Mais reúne preferências, cenários, decorações, leitura e backups.
 
-READING REWARDS
-Open PokePal once, then read. Return to collect 1 berry and 3 XP for every
-15 recorded minutes. Leftover minutes carry over. Old reading history
-isn't rewarded when you first turn it on.
-Kindle's reader needs supported timing files beside the book.
-KOReader needs this plugin enabled; Reading statistics can stay off.
-Sleep and time spent in PokePal do not count. KOReader counts at most
-two minutes per page and skips turns faster than five seconds.
-More > Reading rewards shows progress and lets you turn rewards off.
+LEITURA
+Abra o jogo uma vez e depois leia. Volte para recolher recompensas:
+15 minutos registrados = 1 fruta + 3 XP. Sobras de tempo são mantidas.
+Histórico anterior à ativação não rende recompensas.
+O leitor do Kindle precisa de arquivos de tempo compatíveis junto ao livro.
+KOReader precisa do plugin ativado. Sono e tempo no jogo não contam.
+KOReader limita o registro a dois minutos por página e ignora viradas em menos de cinco segundos.
+Mais > Prêmios de leitura mostra progresso, ovos e metas semanais.
+Um ovo custa 3 frutas e choca após 120 minutos registrados.
+Explorar oferece trilhas por tempo ou por leitura.
 
-OPTIONAL SETTINGS
-More > Preferences has larger text, stronger contrast and automatic rest
-when the Kindle sleeps. KOReader can also show your sleeping partner on
-its sleep screen or add a small reading footer. These settings start off.
-KUAL keeps the Kindle's normal sleep screen. No screensaver add-on is needed.
+PREFERÊNCIAS
+Mais > Preferências oferece texto maior, contraste e descanso automático.
+KOReader também oferece Pokémon na tela de descanso e rodapé de leitura.
+KUAL mantém a tela normal de descanso do Kindle.
 
-AROUND THE NEST
-Explore > As you read starts a trail that advances with recorded reading.
-Timed trips are the default and don't need reading rewards.
-More > Reading rewards > Your egg has eggs for 3 berries. Read for 120 minutes, then tap
-Hatch your egg. It joins the journal and keeps your current partner.
-The same minutes advance your egg, trail and regular reading rewards.
-Home keeps your pet, care stats, bond and XP together.
-Feed, play, train, rest, clean and collect daily berries from home.
-More holds reading rewards, backgrounds, decorations and backups.
-Decorations cost berries once and can be placed or hidden in any background.
-Profile > Nickname lets you name your partner. The name stays when it evolves.
-Profile > Change companion lets you switch partners. Choose from all 160
-Pokemon opens the full list, even for Pokemon you haven't met. Tap one and
-confirm. Each keeps its XP, bond and nickname. The full list is also
-available when starting a new game, alongside the eight quick starters.
-More > Reading rewards > Weekly goal offers 60, 120 or 180 minutes. Reach it for 5 berries
-and 10 XP. Weeks start on Monday and count minutes collected that week.
-Last visit in the reading menu shows your rewards, trail and egg progress.
-More > Backups saves your game and reading records together. Tap Preview
-before restoring. Your current game is kept under Before last restore.
-If a restore stops midway, close and reopen PokePal to finish it.
-Copy the pokepal folder to your computer to keep a backup off the Kindle.
-Use matching builds in both readers. Back up the whole pokepal folder
-before updating; older builds cannot read the new save fields.
-
-HELP
-Missing from KUAL? Check extensions/pokepal/menu.json is on your Kindle.
-Missing from KOReader? Check koreader/plugins/pokepal.koplugin/main.lua,
-then enable PokePal in Plugin management and restart.
-KUAL startup errors are logged in extensions/pokepal/data/launch.log.
-Device notes: native/README.md in the source download.
-
-Tap a journal entry to switch partners or view animations.
-More > Refresh screen clears a ghosted screen.
+AJUDA
+KUAL: confira extensions/pokepal/menu.json.
+KOReader: confira koreader/plugins/pokepal.koplugin/main.lua.
+Erros de abertura no KUAL: extensions/pokepal/data/launch.log.
+Mais > Atualizar tela limpa rastros na tela.
+O suporte de toque, suspensão e tela deve ser verificado no aparelho.
+Consulte README.md no código-fonte para instruções completas e licenças.

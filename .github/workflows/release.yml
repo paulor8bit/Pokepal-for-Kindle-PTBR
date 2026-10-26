@@ -1,23 +1,12 @@
-name: Build and publish PokePal
+name: Compilar PokeK PT-BR
 on:
   workflow_dispatch:
   push:
     branches: [main]
 permissions:
-  contents: write
+  contents: read
 jobs:
-  trailer:
-    if: github.repository == 'itsParassharma/Pokepal-for-Kindle' && github.event_name == 'push' && contains(github.event.head_commit.message, '[trailer]')
-    runs-on: ubuntu-22.04
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v4
-      - name: Update the 1.0.8 trailer
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh release upload v1.0.8 docs/PokePal-trailer.mp4 --clobber
-  release:
-    if: github.repository == 'itsParassharma/Pokepal-for-Kindle' && (github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[release]'))
+  build:
     runs-on: ubuntu-22.04
     timeout-minutes: 20
     steps:
@@ -25,14 +14,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Check game, saves, sprites and layouts
+      - name: Verificar jogo e interface
         run: |
           python -m pip install -r requirements-dev.txt
           python tests/test_and_render.py
-      - name: Download the pinned compiler
+      - name: Baixar compilador fixado
         run: |
           python - <<'PY'
-          import hashlib, json, pathlib, tarfile, urllib.request
+          import hashlib,json,pathlib,tarfile,urllib.request
           data=json.load(urllib.request.urlopen('https://ziglang.org/download/index.json'))['0.13.0']['x86_64-linux']
           compiler=pathlib.Path('../pokepal-compiler');compiler.mkdir(exist_ok=True)
           source=compiler/'zig.tar.xz'
@@ -40,21 +29,18 @@ jobs:
           assert hashlib.sha256(source.read_bytes()).hexdigest()==data['shasum']
           with tarfile.open(source) as archive: archive.extractall(compiler,filter='data')
           PY
-      - name: Build and inspect ARM executable
+      - name: Compilar e verificar executável ARM
         run: |
           python tools/build_native.py --zig ../pokepal-compiler/zig-linux-x86_64-0.13.0/zig --deps ../pokepal-build-cache
           file native/build/pokepal
           readelf -h native/build/pokepal
           if readelf -l native/build/pokepal | grep -q INTERP; then exit 1; fi
           sh -n native/kual/launch.sh
-      - name: Package clean downloads and corresponding source
+          sh -n native/kual/sleep-watch.sh
+      - name: Gerar pacotes e fontes correspondentes
         run: python tools/package_release.py --deps ../pokepal-build-cache
-      - name: Publish 1.0.8
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if ! gh release view v1.0.8 >/dev/null 2>&1; then
-            gh release create v1.0.8 --target "$GITHUB_SHA" --title "1.0.8" --draft --notes-file docs/release-v1.0.8.md
-          fi
-          gh release upload v1.0.8 dist/PokePal-v1.0.8-* docs/PokePal-trailer.mp4 --clobber
-          gh release edit v1.0.8 --title "1.0.8" --draft=false --prerelease=false --latest --notes-file docs/release-v1.0.8.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PokeK-PTBR-v1.0.8
+          path: dist/PokeK-PTBR-v1.0.8-*
+          if-no-files-found: error

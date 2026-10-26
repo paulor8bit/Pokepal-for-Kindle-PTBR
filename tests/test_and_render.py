@@ -29,14 +29,14 @@ def listdir(path):
  try:return lua.table_from(os.listdir(path))
  except OSError:return None
 g.host_fs=fs;g.host_listdir=listdir
-lua.execute((REPO/'tests'/'test_engine.lua').read_text())
-lua.execute((REPO/'tests'/'test_reading.lua').read_text())
-lua.execute((REPO/'tests'/'test_adventures.lua').read_text())
-lua.execute((REPO/'tests'/'test_companion.lua').read_text())
-lua.execute((REPO/'tests'/'test_backups.lua').read_text())
-lua.execute((REPO/'tests'/'test_improvements.lua').read_text())
+lua.execute((REPO/'tests'/'test_engine.lua').read_text(encoding="utf-8"))
+lua.execute((REPO/'tests'/'test_reading.lua').read_text(encoding="utf-8"))
+lua.execute((REPO/'tests'/'test_adventures.lua').read_text(encoding="utf-8"))
+lua.execute((REPO/'tests'/'test_companion.lua').read_text(encoding="utf-8"))
+lua.execute((REPO/'tests'/'test_backups.lua').read_text(encoding="utf-8"))
+lua.execute((REPO/'tests'/'test_improvements.lua').read_text(encoding="utf-8"))
 
-sprite_index=json.loads((ROOT/'assets/sprite-index.json').read_text())
+sprite_index=json.loads((ROOT/'assets/sprite-index.json').read_text(encoding="utf-8"))
 def read_sprite(name):
  species,offset,length=sprite_index[name]
  with (ROOT/'assets'/f'{species:03d}.bin').open('rb') as stream:
@@ -159,7 +159,7 @@ def start(w=600,h=800):
  canvas=Image.new('L',(w,h),255);draw=ImageDraw.Draw(canvas);bounds=[];truncated=[];painted_text=[];painted_sprites=[];painted_text_boxes=[]
  g.D.w=w;g.D.h=h
 start()
-lua.execute((REPO/'tests'/'test_reader_lifecycle.lua').read_text())
+lua.execute((REPO/'tests'/'test_reader_lifecycle.lua').read_text(encoding="utf-8"))
 lua.execute(r'''
 local checks=0
 local function check(name,fn) fn();checks=checks+1;print('PASS '..name) end
@@ -226,7 +226,7 @@ check('home keeps the original pet controls and reading stays under More',functi
  for _,action in ipairs({'preferences','memories','help','reading'}) do assert(actions[action],action) end
  tapButton(v,'nav','reading');tapButton(v,'nav','egg');assert(v.screen=='egg')
  v:go('home');v.state.resting=true;tapButton(v,'startplay',nil)
- assert(v.screen=='home' and v.message:find('Wake up',1,true));v:leave()
+ assert(v.screen=='home' and v.message:find('Acordar',1,true));v:leave()
 end)
 check('an away partner stays away when the scene or berry basket is tapped',function()
  v=newView(4);dofile(BASE..'/reading.lua').init(v.state);v:act('readingtrip',1);U:drain()
@@ -456,7 +456,7 @@ check('opening shows the pet and keeps reading recaps in their own menu',functio
  local P=dofile(BASE..'/main.lua');local reader=P:new{path=BASE,ui={menu={registerToMainMenu=function() end}}}
  reader:openPet();reader:syncReading();reader.pet_view:leave()
  reader.clock.pending=900;reader:openPet();reader:syncReading();assert(reader.pet_view.screen=='home' and reader.recap.seconds==900)
- assert(not reader.pet_view.message:find('Reading:',1,true))
+ assert(not reader.pet_view.message:find('Leitura:',1,true))
  tapButton(reader.pet_view,'nav','more');tapButton(reader.pet_view,'nav','reading');tapButton(reader.pet_view,'nav','recap')
  assert(reader.pet_view.screen=='recap' and #U.queue==0);tapButton(reader.pet_view,'nav','home');reader.pet_view:leave()
  reader:openPet();reader:syncReading();assert(reader.pet_view.screen=='home' and not reader.recap);reader.pet_view:leave()
@@ -509,7 +509,7 @@ end)
 print('UI LIFECYCLE: '..checks..' checks passed (mock KOReader device APIs)')
 ''')
 
-lua.execute((REPO/'tests'/'test_new_ui.lua').read_text())
+lua.execute((REPO/'tests'/'test_new_ui.lua').read_text(encoding="utf-8"))
 
 # Check the displayed dates and totals using real daylight-saving transitions.
 if hasattr(time,'tzset'):
@@ -536,11 +536,11 @@ if hasattr(time,'tzset'):
     days[day.isoformat()]=lua.table_from({'ko':(i+1)*60 if 0<=i<=6 else 60000,'kindle':0})
    now=lua.eval('os.time')(lua.table_from({'year':today.year,'month':today.month,'day':today.day,'hour':12}))
    render_history(now,week,days)
-   assert 'Week of '+monday.strftime('%d %b %Y') in painted_text,(zone,painted_text)
+   assert 'Semana de '+monday.strftime('%d/%m/%Y') in painted_text,(zone,painted_text)
    labels=[text for text,x,y,*_ in painted_text_boxes if x==32 and 243<=y<=501]
-   expected=[(monday+datetime.timedelta(days=i)).strftime('%a %d') for i in range(7)]
+   expected=[(monday+datetime.timedelta(days=i)).strftime('%d/%m') for i in range(7)]
    assert labels==expected,(zone,labels,expected)
-   assert '28 minutes recorded' in painted_text,(zone,painted_text)
+   assert '28 minutos registrados' in painted_text,(zone,painted_text)
  finally:
   if original_tz is None:os.environ.pop('TZ',None)
   else:os.environ['TZ']=original_tz
@@ -610,7 +610,7 @@ for w,h in [(600,800),(1072,1448),(1264,1680),(800,600)]:
    for i in range(24):g.E.note(v.state,f'Moment {i+1}',int(v.state.last))
   im=paint(v,w,h)
   if screen=='home':
-   for label in ('Food ','Joy ','Energy ','Hygiene ','Bond '):assert any(text.startswith(label) for text in painted_text),label
+   for label in ('Comida ','Alegria ','Energia ','Higiene ','Vínculo '):assert any(text.startswith(label) for text in painted_text),label
    assert not any('min read' in text or 'next berry' in text for text in painted_text)
   if (w,h)==(600,800):im.save(OUT/f'layout-{screen}.png')
   v.freeImages(v)
@@ -644,7 +644,7 @@ for w,h in [(600,800),(1072,1448),(1264,1680),(800,600)]:
  v=g.newView(4);v.owner.save_error=True
  for screen in ('home','reading','profile','more','decorations','backgrounds','weekly','backups'):
   v.go(v,screen);paint(v,w,h)
-  assert any(text.startswith('Not saved.') for text in painted_text),screen
+  assert any(text.startswith('Não salvo.') for text in painted_text),screen
   assert not truncated,(screen,truncated)
  v.freeImages(v)
 print('SAVE WARNINGS: visible without clipped text on 32 page/size combinations')
@@ -714,7 +714,7 @@ for w,h in [(600,800),(1072,1448),(1264,1680),(800,600)]:
  for index,species in g.E.starters.items():
   v=g.newView(None);v.starter_index=index;paint(v,w,h)
   assert painted_sprites==[species] and not truncated,(species,truncated)
-  assert f'Start with {g.E.name(species)}' in painted_text
+  assert f'Começar com {g.E.name(species)}' in painted_text
   if (w,h)==(600,800) and species==152:canvas.save(OUT/'PokePal-starter-picker.png')
   g.tapButton(v,'choose',species);assert v.state.species==species;v.leave(v);species_layouts+=1
  for species,family in profile_cases.items():
@@ -722,7 +722,7 @@ for w,h in [(600,800),(1072,1448),(1264,1680),(800,600)]:
   assert painted_sprites==list(family),(species,painted_sprites,family)
   assert not truncated,(species,truncated)
   if not g.E.species[species][2]:
-   assert any(f'{g.E.name(species)} is fully evolved.' in text for text in painted_text)
+   assert any(f'{g.E.name(species)} já atingiu a evolução final.' in text for text in painted_text)
   if (w,h)==(600,800) and species in (152,133,160):canvas.save(OUT/f'PokePal-profile-{species}.png')
   species_layouts+=1
   for screen in ('home','train','sleep'):
@@ -744,7 +744,7 @@ for species in range(1,161):
 print('JOURNAL: all 160 entries and 800 pose buttons rendered and dispatched')
 
 v=g.newView(4);v.state.bond=28;v.state.xp=48;v.state.food=76;v.state.joy=84;v.state.energy=72;v.state.dirt=22
-v.message='Charmander is happy to see you.'
+v.message='Charmander fica feliz em ver você.'
 v.state.animation='gentle';v.animating=False;v.effect=None
 paint(v).save(OUT/'PokePal-preview.png')
 frames=[]
@@ -757,20 +757,20 @@ for n in [1,2,3,4,1]:
  v.frame=n;v.animating=n!=1;v.effect='play' if n!=1 else None
  frames.append(paint(v))
 frames[0].save(OUT/'PokePal-animation.gif',save_all=True,append_images=frames[1:],duration=[450]*4+[2500],disposal=2)
-v.state.resting=True;v.message='Resting peacefully. Energy recovers while you read.';v.animating=False;v.effect=None
+v.state.resting=True;v.message='Descansando em paz. A energia volta enquanto você lê.';v.animating=False;v.effect=None
 paint(v).save(OUT/'PokePal-sleep-preview.png')
 sleep_frames=[]
 for n in [1,2,1]:
  v.frame=n;v.animating=n!=1;v.effect='ambient_sleep' if n!=1 else None
  sleep_frames.append(paint(v))
 sleep_frames[0].save(OUT/'PokePal-sleep-preview.gif',save_all=True,append_images=sleep_frames[1:],duration=[800,800,2500],disposal=2)
-v.state.resting=False;v.message='Charmander is happy to see you.'
+v.state.resting=False;v.message='Charmander fica feliz em ver você.'
 v.screen='profile';paint(v).save(OUT/'PokePal-evolution.png')
 print(f'PREVIEW: rendered from game view with {font(18).getname()[0]}; desktop rendering, not a Kindle capture')
 
 # Every species, every frame is present, grayscale and correctly sized.
 count=0
-manifest=lua.execute((ROOT/'assets'/'frames.lua').read_text())
+manifest=lua.execute((ROOT/'assets'/'frames.lua').read_text(encoding="utf-8"))
 for id in g.E.species.keys():
  hashes=[]
  for fr in range(1,manifest[id]+1):
@@ -779,7 +779,7 @@ for id in g.E.species.keys():
  assert len(set(hashes))>=2,f'{id}: idle must move'
 species_ids=set(g.E.species.keys())
 assert set(manifest.keys())==species_ids
-sources=json.loads((ROOT/'assets'/'sources.json').read_text())
+sources=json.loads((ROOT/'assets'/'sources.json').read_text(encoding="utf-8"))
 assert len(sources)==len(species_ids) and {record['id'] for record in sources}==species_ids
 for record in sources:
  assert record['count']==manifest[record['id']]
@@ -787,7 +787,7 @@ for record in sources:
  assert len(set(record['sampled']))==len(record['sampled'])
  assert all(0<=index<record['original_frames'] for index in record['sampled'])
 print(f'ASSETS: {count} valid transparent frames; all {len(species_ids)} species have frames and source records')
-poses=lua.execute((ROOT/'assets'/'poses.lua').read_text())
+poses=lua.execute((ROOT/'assets'/'poses.lua').read_text(encoding="utf-8"))
 pose_count=0
 for id in poses.keys():
  assert set(poses[id].keys())=={'idle','sleep','walk','attack','eat'}
@@ -798,7 +798,7 @@ for id in poses.keys():
    assert img.size==(96,96) and img.mode=='LA'
    assert set(img.getchannel('L').tobytes()).issubset({0,85,170,255})
    hashes.append(img.tobytes());pose_count+=1
-  record=next(r for r in json.loads((ROOT/'assets'/'pose-sources.json').read_text()) if r['species']==id and r['pose'].lower()==pose)
+  record=next(r for r in json.loads((ROOT/'assets'/'pose-sources.json').read_text(encoding="utf-8")) if r['species']==id and r['pose'].lower()==pose)
   assert len(set(hashes))>=2 and record['motion'],(id,pose)
 print(f'POSES: {pose_count} valid grayscale alpha frames; every species has five moving poses')
 compile_lua=lua.eval('function(path) assert(loadfile(path)) end')

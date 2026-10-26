@@ -22,7 +22,7 @@ local function fixture()
 end
 test('backup restores game and counter together and keeps the replaced game',function()
  local s,b,p=fixture();s.berries=80
- E.act(s,'egg',nil,now);E.act(s,'goal',3600,now);E.act(s,'decorate',2,now);E.act(s,'nickname','Ember',now)
+ E.act(s,'egg',nil,now);E.act(s,'goal',3600,now);E.act(s,'decorate',2,now);E.act(s,'nickname',"Brasa",now)
  assert(b:create(s));local original=S.encode(s);local preview=assert(b:preview('backup'))
  s.xp=91;s.berries=50;assert(R.saveCounter(p..'.reading',200));assert(S.save(p,s,E))
  local current=S.encode(s);assert(b:restore(s,preview))
@@ -36,7 +36,7 @@ test('preview is read only and a changed backup must be previewed again',functio
  local preview=assert(b:preview('backup'))
  assert(bytes(p)==game and bytes(p..'.reading')==counter and not F.mode(p..'.before-restore'))
  s.xp=8;assert(b:create(s));local ok,err=b:restore(s,preview)
- assert(not ok and err:find('changed') and s.xp==8 and not F.mode(p..'.restore'))
+ assert(not ok and err:find('mudou') and s.xp==8 and not F.mode(p..'.restore'))
  assert(not b:preview('../other'))
 end)
 test('backup parsing rejects corruption and recovers the previous complete copy',function()

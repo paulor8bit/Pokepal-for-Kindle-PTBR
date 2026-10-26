@@ -102,14 +102,14 @@ function S.load(path,engine)
  local state=S.decode(primary,engine)
  if state then return state end
  state=S.decode(backup,engine)
- if state then return state,"Recovered the previous saved snapshot." end
- if primary or backup then return nil,"Save is unreadable; existing files were left unchanged." end
+ if state then return state,"A cópia anterior do save foi recuperada." end
+ if primary or backup then return nil,"Save ilegível; os arquivos existentes foram preservados." end
  return nil
 end
 function S.save(path,s,engine,syncfile,syncdir)
- if not engine.valid(s) then return nil,"Invalid game state." end
+ if not engine.valid(s) then return nil,"Estado do jogo inválido." end
  local data=S.encode(s)
- if not S.decode(data,engine) then return nil,"Could not serialize game state." end
+ if not S.decode(data,engine) then return nil,"Não foi possível converter os dados do jogo." end
  local current=read(path)
  if current==data and not uncertain[path] then return true end
  local f,err=io.open(path..".tmp","wb");if not f then return nil,err end
@@ -138,7 +138,7 @@ end
 function S.location(fallback,fs)
  if fs.mode("/mnt/us")=="directory" then
   local dir="/mnt/us/pokepal"
-  if fs.mode(dir)~="directory" and not fs.mkdir(dir) then return nil,"Could not create the shared save folder." end
+  if fs.mode(dir)~="directory" and not fs.mkdir(dir) then return nil,"Não foi possível criar a pasta compartilhada de saves." end
   return dir.."/pokepal.dat"
  end
  return fallback
@@ -151,7 +151,7 @@ function S.open(path,legacy,engine,fs,recover)
  end
  local state,notice=S.load(path,engine)
  if not state and (notice or fs.mode(path) or fs.mode(path..".old")) then
-  unlock();return nil,notice or "Could not read the save; existing files were left unchanged."
+  unlock();return nil,notice or "Não foi possível ler o save; os arquivos existentes foram preservados."
  end
  if not state then
   local invalid,found=false,0
@@ -162,8 +162,8 @@ function S.open(path,legacy,engine,fs,recover)
     elseif problem or fs.mode(oldpath) or fs.mode(oldpath..".old") then invalid=true end
    end
   end
-  if not state and invalid then unlock();return nil,"Old save is unreadable; files were left unchanged." end
-  if found>0 then notice=found>1 and "Loaded your most recently used save. Original saves kept." or "Moved your progress to the shared save. Original kept." end
+  if not state and invalid then unlock();return nil,"Save antigo ilegível; os arquivos foram preservados." end
+  if found>0 then notice=found>1 and "Seu save mais recente foi carregado. Os originais foram preservados." or "Seu progresso foi copiado para o save compartilhado. O original foi preservado." end
  end
  return {state=state,notice=notice,close=unlock}
 end

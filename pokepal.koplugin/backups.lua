@@ -35,7 +35,7 @@ function B:decode(data)
  if state then return {state=state,ko=ko,at=at,data=data,days=days} end
 end
 function B:write(path,data)
- if not self:decode(data) then return nil,"Backup is unreadable." end
+ if not self:decode(data) then return nil,"Não foi possível ler o backup." end
  local f,err=io.open(path..".tmp","wb");if not f then return nil,err end
  local ok;ok,err=f:write(data)
  if ok then ok,err=f:flush() end
@@ -55,17 +55,17 @@ function B:write(path,data)
  return true
 end
 function B:preview(slot)
- if slot~="backup" and slot~="before-restore" then return nil,"Unknown backup." end
+ if slot~="backup" and slot~="before-restore" then return nil,"Backup desconhecido." end
  local path=self.path.."."..slot;local data=read(path);local backup=self:decode(data)
  if not backup then
   backup=self:decode(read(path..".old"))
   if backup then backup.previous=true end
  end
  if backup then backup.slot=slot;return backup end
- return nil,(data or self.fs.mode(path) or self.fs.mode(path..".old")) and "This backup could not be read." or "No backup yet."
+ return nil,(data or self.fs.mode(path) or self.fs.mode(path..".old")) and "Não foi possível ler este backup." or "Ainda não há backup."
 end
 function B:create(state)
- if self.blocked or self.fs.mode(self.path..".restore") then return nil,"Reopen PokePal to finish restoring first." end
+ if self.blocked or self.fs.mode(self.path..".restore") then return nil,"Reabra o PokeK para concluir a restauração." end
  local unlock,err=self.fs.lock(self.path..".reading.session");if not unlock then return nil,err end
  local ko,primary,days;ko,err,primary,days=self.reading.counter(self.path..".reading")
  local ok
@@ -91,13 +91,13 @@ function B:recover()
  if not self.fs.mode(self.path..".restore") then self.blocked=false;return true end
  local unlock,err=self.fs.lock(self.path..".reading.session");if not unlock then return nil,err end
  local pending=self:decode(read(self.path..".restore"));local ok
- if pending then ok,err=self:apply(pending) else err="Restore record is unreadable. Existing saves were kept." end
+ if pending then ok,err=self:apply(pending) else err="Registro de restauração ilegível. Os saves foram preservados." end
  self.blocked=not ok;unlock();return ok,err
 end
 function B:restore(state,preview)
- if self.blocked or self.fs.mode(self.path..".restore") then return nil,"Reopen PokePal to finish restoring first." end
+ if self.blocked or self.fs.mode(self.path..".restore") then return nil,"Reabra o PokeK para concluir a restauração." end
  local backup,err=self:preview(preview and preview.slot)
- if not backup or backup.data~=preview.data then return nil,err or "The backup changed. Preview it again first." end
+ if not backup or backup.data~=preview.data then return nil,err or "O backup mudou. Confira a prévia novamente." end
  local unlock;unlock,err=self.fs.lock(self.path..".reading.session");if not unlock then return nil,err end
  local ko,primary,days;ko,err,primary,days=self.reading.counter(self.path..".reading")
  local ok

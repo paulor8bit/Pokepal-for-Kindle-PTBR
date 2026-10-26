@@ -56,7 +56,7 @@ test('journal filters use each partners own progress and stable recent order',fu
  assert(C.journal(s,E,'','recent')[1]==25)
  assert(C.journal(s,E,'','Water')[1]==7)
  assert(C.journal(s,E,'','ready')[1]==7)
- E.act(s,'nickname','Ember',now);assert(C.journal(s,E,'emb','met')[1]==4)
+ E.act(s,'nickname',"Brasa",now);assert(C.journal(s,E,'bra','met')[1]==4)
 end)
 test('trail choices survive reload and cannot grant rewards twice',function()
  local s=pet();E.act(s,'trip',1,now);local event=s.companion.journey.event

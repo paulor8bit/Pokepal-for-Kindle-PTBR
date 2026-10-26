@@ -1,51 +1,77 @@
-# PokePal for Kindle
+# PokeK — Pokémon para Kindle em PT-BR
 
-A Pokémon pet for your Kindle. Feed it, play together and watch it grow.
+Versão em português brasileiro baseada no projeto original [PokePal for Kindle](https://github.com/itsParassharma/Pokepal-for-Kindle), criado por **itsParassharma**. Base: 1.0.8.
 
-![PokePal](docs/kindle-preview.png)
+Cuide de um companheiro Pokémon nas pausas de leitura: alimente, brinque, treine, explore trilhas e evolua. São 160 parceiros, ovos, metas semanais, decorações, diário e insígnias. Funciona offline.
 
-[Download 1.0.8](https://github.com/itsParassharma/Pokepal-for-Kindle/releases/tag/v1.0.8) · [Watch the trailer](https://github.com/itsParassharma/Pokepal-for-Kindle/releases/download/v1.0.8/PokePal-trailer.mp4)
+Menus, diálogos, cuidados, golpes, tipos, conquistas e mensagens de erro do jogo estão em português brasileiro. Os nomes dos Pokémon e das frutas Oran, Pecha e Cheri foram preservados. As datas aparecem no formato dia/mês/ano.
 
-## Features
+![PokeK com interface em português brasileiro](docs/kindle-preview.png)
 
-- Pick one of eight quick starters, or choose any of the 160 Pokémon.
-- Feed, play, train, rest and clean. Collect daily berries, give your partner a nickname and watch it react to its mood.
-- Earn berries and XP, hatch eggs and reach weekly goals as you read.
-- Explore three different trails, find Pokémon and choose what happens on the way home.
-- Help your partner evolve by building XP and bond.
-- Discover favourite berries and watch your partner settle beside its decorations.
-- Search your journal, save favourites and find friends ready to evolve. Earn 14 badges.
-- Turn the screen off and let your Pokémon rest. KOReader can show your partner curled up beside its egg on the sleep screen.
-- Choose larger text, stronger contrast or a small reading footer in settings.
-- Everything works offline.
+*Prévia gerada pela interface do jogo no computador.*
 
-More:
-[Reading rewards guide](docs/reading-rewards.md)
-[Sleep screen setup](docs/companion-update.md#sleep-screen).
+## Arquivos para instalar
 
-See [what changed in 1.0.8](docs/release-v1.0.8.md).
+[Baixar a versão PT-BR](https://github.com/paulor8bit/Pokepal-for-Kindle-PTBR/releases/tag/v1.0.8-ptbr.1). Os pacotes também ficam em `dist/` após compilar:
 
-## Install with KUAL
+- [PokeK-PTBR-v1.0.8-kual.zip](https://github.com/paulor8bit/Pokepal-for-Kindle-PTBR/releases/download/v1.0.8-ptbr.1/PokeK-PTBR-v1.0.8-kual.zip) — versão independente para KUAL.
+- [PokeK-PTBR-v1.0.8-koreader.zip](https://github.com/paulor8bit/Pokepal-for-Kindle-PTBR/releases/download/v1.0.8-ptbr.1/PokeK-PTBR-v1.0.8-koreader.zip) — plugin para KOReader.
+- [PokeK-PTBR-v1.0.8-corresponding-source.zip](https://github.com/paulor8bit/Pokepal-for-Kindle-PTBR/releases/download/v1.0.8-ptbr.1/PokeK-PTBR-v1.0.8-corresponding-source.zip) — código-fonte e dependências exatas da versão KUAL; mantenha junto ao executável ao redistribuir.
+- [PokeK-PTBR-v1.0.8-SHA256.txt](https://github.com/paulor8bit/Pokepal-for-Kindle-PTBR/releases/download/v1.0.8-ptbr.1/PokeK-PTBR-v1.0.8-SHA256.txt) — hashes para verificar os downloads.
 
-You need a jailbroken touchscreen Kindle with KUAL installed. KOReader is not required.
+## Instalar pelo KUAL
 
-1. Download and unzip **PokePal-v1.0.8-kual.zip**.
-2. Connect your Kindle by USB. Copy the `extensions` folder onto the Kindle drive, next to `documents`. Merge folders if asked.
-3. Eject your Kindle, then open **KUAL > PokePal > Play PokePal**.
+Requer um Kindle com tela sensível ao toque, jailbreak e KUAL instalado. Não precisa de KOReader.
 
-## Install with KOReader
+1. Extraia o ZIP do KUAL no computador.
+2. Conecte o Kindle por USB e copie a pasta `extensions` para a raiz do Kindle, ao lado de `documents`. Mescle com a pasta existente.
+3. Ejete o Kindle e abra **KUAL > PokeK PT-BR > Jogar PokeK**.
 
-You need KOReader installed on your Kindle.
+O executável é para Kindle ARMv7/Linux com tela sensível ao toque. A compatibilidade de toque, suspensão e atualização da tela precisa ser conferida no aparelho.
 
-1. Download and unzip **PokePal-v1.0.8-koreader.zip**.
-2. Copy the `koreader` folder onto the Kindle drive. Merge it with the existing folder.
-3. Restart KOReader, then open **Tools > More tools > PokePal**.
+## Instalar pelo KOReader
 
-## Saves
+1. Extraia o ZIP do KOReader no computador.
+2. Copie a pasta `koreader` para a raiz do Kindle, mesclando com a instalação existente. O arquivo principal deve ficar em `koreader/plugins/pokepal.koplugin/main.lua`.
+3. Reinicie o KOReader e procure **PokeK - Companheiro Pokémon** em **Ferramentas > Mais ferramentas**. O nome dos menus do KOReader depende do idioma dele.
+4. Se não aparecer, confira se o plugin está ativado no gerenciamento de plugins.
 
-Both editions share your save. Use **More > Backups** to save or restore, and copy the `pokepal` folder to your computer before updating.
+## Saves e atualização
 
-[Save help](pokepal.koplugin/INSTALL.txt) · [Build and device notes](native/README.md) · [Credits](pokepal.koplugin/CREDITS.txt)
+As duas versões compartilham `/mnt/us/pokepal/pokepal.dat`. Os diretórios técnicos `pokepal` e `pokepal.koplugin` foram mantidos para atualizar a instalação anterior e reutilizar os saves. Feche o jogo antes de abrir a outra versão.
 
-Unofficial fan project. Sprites by [SpriteCollab contributors](https://github.com/PMDCollab/SpriteCollab).
-Pokémon belongs to its respective owners. Shared game code is MIT; the standalone host is GPL-3.0-or-later.
+Antes de atualizar, copie toda a pasta `pokepal` do Kindle para o computador. Atualize as duas versões se usar ambas. Saves antigos são copiados na primeira abertura, preservando os originais; se houver dois, o mais recente é escolhido.
+
+Em **Mais > Backups**, salve um backup ou confira a prévia antes de restaurar. O jogo anterior fica em **Antes da restauração**. Se uma restauração for interrompida, feche e reabra o jogo.
+
+## Leitura e cuidados
+
+- Abra o jogo uma vez, leia e volte: cada 15 minutos registrados rende 1 fruta e 3 XP. O histórico anterior à ativação não gera recompensas.
+- No Kindle, a leitura depende dos arquivos de tempo compatíveis ao lado do livro. No KOReader, mantenha o plugin ativado; o tempo dormindo ou dentro do jogo não conta.
+- Em **Mais > Prêmios de leitura**, acompanhe ovos, metas de 60/120/180 minutos e histórico. Um ovo custa 3 frutas e choca após 120 minutos registrados.
+- Em **Explorar**, escolha expedições por tempo ou pela leitura. O mesmo tempo pode avançar o ovo, a trilha e as recompensas.
+- Em **Mais > Preferências**, ajuste o tamanho do texto, contraste e descanso automático. A tela de descanso com Pokémon e o rodapé estão disponíveis no KOReader. KUAL mantém a tela de descanso normal do Kindle.
+- Em **Perfil**, troque de parceiro ou dê um apelido. Cada amigo mantém seu XP e vínculo; o apelido acompanha a evolução.
+
+## Desenvolvimento
+
+Com Python 3.12+, Git e Zig 0.13.0:
+
+```sh
+python -m pip install -r requirements-dev.txt
+python tests/test_and_render.py
+python tools/build_native.py --zig /caminho/para/zig --deps /caminho/para/cache
+python tools/package_release.py --deps /caminho/para/cache
+```
+
+No Windows use o caminho de `zig.exe`. O build baixa revisões fixas de Lua, FBInk e stb. Para testar o renderizador nativo no computador, acrescente `--headless` ao build e execute o teste descrito em [native/README.md](native/README.md).
+
+O catálogo revisado está em `tools/pt-BR.json`; `pokepal.koplugin/labels.lua` traduz rótulos cuja chave original precisa continuar no save. Os testes verificam regras, saves, leitura, interação e o espaço dos textos em várias telas. Eles não substituem o teste físico de toque e suspensão no Kindle.
+
+## Créditos e licenças
+
+Projeto original: **itsParassharma**. Tradução brasileira: **paulor8bit**. Sprites: [colaboradores do SpriteCollab](https://github.com/PMDCollab/SpriteCollab). Dados: [PokeAPI](https://github.com/PokeAPI/pokeapi).
+
+Projeto de fãs, sem vínculo oficial. Pokémon pertence aos respectivos titulares. Código compartilhado: MIT. Host nativo e inicializadores: GPL-3.0-or-later. Os sprites têm termos próprios, incluindo atribuição e uso não comercial. As licenças e os registros originais de créditos foram preservados. Consulte [CREDITS.txt](pokepal.koplugin/CREDITS.txt).
+
+Os documentos históricos em `docs/` e os avisos legais originais permanecem como referência da versão de origem.

@@ -4,11 +4,11 @@ local dir=debug.getinfo(1,"S").source:sub(2):match("^(.*)/")
 C.text=dofile(dir.."/utf8text.lua")
 C.preferences={"sleep_screen","auto_rest","footer","large_text","high_contrast"}
 C.berries={"Oran","Pecha","Cheri"}
-C.traits={"Curious","Quiet","Playful","Patient"}
+C.traits={"Curioso","Tranquilo","Brincalhão","Paciente"}
 C.events={
- {title="A fork in the trail",text="There are berries beside the stream and tracks up the hill.",choices={"Follow the stream","Follow the tracks"},rewards={{berries=2},{xp=5}}},
- {title="A tired traveller",text="A small Pokemon is resting by the path. There is room to sit beside it.",choices={"Keep them company","Rest together"},rewards={{bond=3},{energy=10}}},
- {title="A sheltered clearing",text="Your partner found a quiet spot with room to practise.",choices={"Practise a move","Take a breather"},rewards={{xp=5},{energy=10}}},
+ {title="Uma bifurcação na trilha",text="Há frutas junto ao riacho e pegadas na colina.",choices={"Seguir o riacho","Seguir as pegadas"},rewards={{berries=2},{xp=5}}},
+ {title="Um viajante cansado",text="Um Pokémon descansa no caminho. Há lugar ao lado dele.",choices={"Fazer companhia","Descansar juntos"},rewards={{bond=3},{energy=10}}},
+ {title="Uma clareira protegida",text="Seu parceiro achou um lugar tranquilo para treinar.",choices={"Treinar um golpe","Tomar um fôlego"},rewards={{xp=5},{energy=10}}},
 }
 local function integer(n,max) return type(n)=="number" and n==n and n>=0 and n<=max and n%1==0 end
 local function keys(t,allowed)
@@ -105,7 +105,7 @@ function C.badges(s,E,now)
   {"All three trails",c and E.count(c.routes)==3},{"A place of our own",s.decor and E.count(s.decor)>=4},
   {"Reading together",c and #c.memories>0},{"Finding a rhythm",c and c.goals>=4},
   {"Favourite snack",c and E.count(c.tastes)>0},{"Kanto explorer",E.kantoCount(s)==151}}
- for _,r in ipairs(rules) do if r[2] and not s.badges[r[1]] then s.badges[r[1]]=true;E.note(s,"Badge earned: "..r[1].."!",now) end end
+ for _,r in ipairs(rules) do if r[2] and not s.badges[r[1]] then s.badges[r[1]]=true;E.note(s,"Insígnia conquistada: "..E.labels.get(r[1]).."!",now) end end
 end
 function C.history(s,ko,kindle,now)
  if not s.companion and (not ko or next(ko)==nil) and (not kindle or kindle<=0) then return end
@@ -119,27 +119,27 @@ function C.act(s,E,action,arg,now)
   for _,key in ipairs(C.preferences) do if arg==key then
    local c=C.get(s);c.prefs[key]=not c.prefs[key]
    if key=="auto_rest" and not c.prefs[key] then C.resume(s,E,now) end
-   return "Preference saved."
+   return "Preferência salva."
   end end
-  return "Choose a preference."
+  return "Escolha uma preferência."
  elseif action=="favourite" then
-  if not s.seen[tostring(arg)] then return "Meet this Pokemon first." end
+  if not s.seen[tostring(arg)] then return "Conheça este Pokémon primeiro." end
   local c=C.get(s);local key=tostring(arg);c.favourites[key]=not c.favourites[key] or nil
-  return c.favourites[key] and "Added to favourites." or "Removed from favourites."
+  return c.favourites[key] and "Adicionado aos favoritos." or "Removido dos favoritos."
  elseif action=="memory" then
-  if s.species==0 then return "Choose your partner first." end
-  if not C.text.valid(arg,100) then return "Enter a book title of up to 100 characters." end
+  if s.species==0 then return "Escolha seu parceiro primeiro." end
+  if not C.text.valid(arg,100) then return "Digite um título com até 100 caracteres." end
   local c=C.get(s)
-  for _,m in ipairs(c.memories) do if m.title==arg and m.id==s.species then return "That book is already in your memories." end end
-  if #c.memories>=100 then return "Your book shelf is full (100 memories)." end
+  for _,m in ipairs(c.memories) do if m.title==arg and m.id==s.species then return "Este livro já está nas suas lembranças." end end
+  if #c.memories>=100 then return "Sua estante está cheia (100 lembranças)." end
   table.insert(c.memories,1,{title=arg,id=s.species,at=now});C.badges(s,E,now)
-  return "Saved a book you read together."
+  return "Livro salvo nas lembranças de vocês."
  elseif action=="trailchoice" then
   local c=s.companion;local j=c and c.journey
-  if not j or E.tripLeft(s,now)>0 then return "Finish the trail first." end
-  if arg~=1 and arg~=2 then return "Choose what happened on the trail." end
-  if j.choice then return "You already chose." end
-  j.choice=arg;return "Choice saved. Collect your partner to hear the rest."
+  if not j or E.tripLeft(s,now)>0 then return "Conclua a trilha primeiro." end
+  if arg~=1 and arg~=2 then return "Escolha o que aconteceu na trilha." end
+  if j.choice then return "Você já escolheu." end
+  j.choice=arg;return "Escolha salva. Busque seu parceiro para ouvir o resto."
  end
 end
 function C.finishTrip(s,E)
@@ -149,7 +149,7 @@ function C.finishTrip(s,E)
   local reward=C.events[j.event].rewards[j.choice]
   for k,n in pairs(reward) do
    local before=s[k];s[k]=math.min(k=="berries" and 999 or k=="xp" and 1e12 or 100,s[k]+n)
-   message=" +"..math.floor(s[k]-before).." "..(k=="xp" and "XP" or k).." from the trail."
+   message=" +"..math.floor(s[k]-before).." "..E.labels.get(k).." da trilha."
   end
  end
  c.journey=nil;return message

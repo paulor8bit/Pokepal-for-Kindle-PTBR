@@ -35,7 +35,7 @@ function I.attach(PokePal,UIManager)
       local pending=math.max(0,(self.clock.total or s.reading.ko)+(self.clock.pending or 0)-s.reading.ko)
       if not s.reading.enabled then pending=0 end
       local progress=1-math.max(0,self.engine.eggLeft(s)-pending)/self.engine.egg_seconds
-      label=label.." / egg "..math.floor(progress*100).."%"
+      label=label.." / ovo "..math.floor(progress*100).."%"
      end
      return label
     end
@@ -75,7 +75,7 @@ function I.attach(PokePal,UIManager)
    local painted,image=pcall(self.sleepImage,self)
    if not painted then
     local logged,logger=pcall(require,"logger")
-    if logged then logger.warn("PokePal: could not draw the sleep screen:",image) end
+    if logged then logger.warn("PokeK: falha ao desenhar a tela de descanso:",image) end
     return result
    end
    if not image then return result end

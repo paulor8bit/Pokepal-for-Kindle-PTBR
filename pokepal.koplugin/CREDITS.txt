@@ -40,3 +40,8 @@ Lua: https://www.lua.org/
 kdoom provided a useful example of a native KUAL game:
 https://github.com/bomberfish/kdoom
 No DOOM data or kdoom source is included.
+
+TRADUÇÃO PT-BR
+Base: itsParassharma/Pokepal-for-Kindle.
+Tradução brasileira: paulor8bit. Edição brasileira: PokeK.
+Nomes técnicos e chaves dos saves preservados para compatibilidade.

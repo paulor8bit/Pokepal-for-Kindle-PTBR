@@ -1,22 +1,38 @@
-POKEPAL 1.0.8
+POKEK PT-BR — base 1.0.8
+Validação local: 26/10/2026, Windows, Python 3.12 e Zig 0.13.0.
 
-The test suite checks game actions, old saves, damaged-save recovery,
-all 160 reachable species, partner progress, UI lifecycle and layouts.
-It also checks choosing any of the 160 species at the start or from
-Profile, confirmation and cancellation, and progress after switching.
-Every species has five moving animations and all 800 pose buttons
-are exercised through the actual touch dispatcher.
-Generated motion is identified in assets/pose-sources.json.
+python tests/test_and_render.py: concluído com sucesso.
+- 36 verificações de regras e armazenamento.
+- 21 verificações de leitura e saves compartilhados.
+- 9 verificações de aventuras de leitura.
+- 14 verificações de recursos de companhia.
+- 9 verificações de backup e restauração.
+- 16 verificações de melhorias opcionais.
+- 9 verificações do ciclo de leitura e 40 do ciclo da interface.
+- Preferências, diário, lembranças, recapitulação e cancelamento de leitura.
+- 48 combinações de tamanho de tela, DPI e acessibilidade.
+- 24 telas de escolha e confirmação de parceiro.
+- 80 combinações de tela/tamanho e 75 de telas adicionais/texto ampliado.
+- Avisos de save em 32 combinações de página/tamanho.
+- 64 estados de metas e 48 cenários de dia/noite.
+- 32 telas de recapitulação, metas, decoração, teclado e backups.
+- 416 telas de parceiros e todas as 160 entradas do diário.
+- Todos os 800 botões de poses exercitados pelo despachante de toque simulado.
+- 589 quadros de animação e 2.863 quadros de poses verificados.
+- Os 19 arquivos Lua distribuídos compilam.
 
-Reader lifecycle tests pass KOReader's book view into the plugin, then
-check reading time, sleep/wake, opening the game from a book, trips
-across book changes, and CloseWidget cleanup over repeated visits.
-Sleep-screen failures keep KOReader's normal screen and lock settings.
-Reading tests also cover same-timestamp Kindle record updates, including
-reloaded caches, and retrying failed disk syncs without duplicate credit.
-On Linux, history dates and totals are checked across both daylight-saving
-changes in Hobart and New York, plus a week in UTC.
+O teste específico de datas em diferentes fusos exige time.tzset e é
+ignorado no Windows. Está previsto no fluxo de build Linux do repositório.
+As imagens locais foram renderizadas no computador, não capturadas no Kindle.
 
-The standalone renderer, save reload and suspend smoke tests run on
-Windows. The ARM executable is built and checked separately.
-Physical device checks are described in native/README.md.
+Teste nativo no Windows: concluído com sucesso.
+Desenho, ações, progresso de parceiros, reabertura do save, suspensão,
+cache de sprites e letras, atualização parcial e atualização explícita.
+
+Executável Kindle: ELF ARM de 32 bits, estático, sem interpretador dinâmico.
+Pacotes ZIP verificados quanto a integridade, permissões de execução,
+ausência de saves de teste e hashes SHA-256.
+
+Ainda é necessário verificar no aparelho: alinhamento do toque,
+atualização da tela de tinta eletrônica, botão de energia, capa magnética
+e retorno à interface do Kindle. Consulte native/README.md no código-fonte.

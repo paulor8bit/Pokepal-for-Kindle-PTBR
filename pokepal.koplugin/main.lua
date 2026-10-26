@@ -23,7 +23,7 @@ function PokePal:init()
  self:installSleepScreen()
 end
 function PokePal:addToMainMenu(items)
- items.pokepal={text="PokePal - Pokemon companion",sorting_hint="more_tools",callback=function() self:openPet() end}
+ items.pokepal={text="PokeK - Companheiro Pokémon",sorting_hint="more_tools",callback=function() self:openPet() end}
 end
 function PokePal:openPet()
  if self.pet_view then return end
@@ -33,7 +33,7 @@ function PokePal:openPet()
  self.session,notice=self.storage.open(self.savepath,{DataStorage:getSettingsDir().."/pokepal.dat",
   "/mnt/us/extensions/pokepal/data/pokepal.dat"},self.engine,self.fs,function() return self.backups:recover() end)
  if not self.session then
-  UIManager:show(InfoMessage:new{text="PokePal: "..notice});self:resumeReading()
+  UIManager:show(InfoMessage:new{text="PokeK: "..notice});self:resumeReading()
   return
  end
  self.state=self.session.state or self.engine.new(os.time());notice=self.session.notice
@@ -44,7 +44,7 @@ function PokePal:openPet()
  self.engine.companion.resume(self.state,self.engine,os.time())
  self.engine.advance(self.state,os.time())
  if not self:save() then
-  UIManager:show(InfoMessage:new{text="PokePal could not save. Check free space on the Kindle."})
+  UIManager:show(InfoMessage:new{text="O PokeK não conseguiu salvar. Verifique o espaço livre no Kindle."})
   self:onPetClosed();return
  end
  self.pet_view=self.View:new{owner=self,engine=self.engine,state=self.state,path=self.path}
@@ -57,7 +57,7 @@ function PokePal:openPet()
 end
 function PokePal:flushReading()
  if not self.counterpath then return end
- if self.fs.mode(self.savepath..".restore") then self.reading_error="Reopen PokePal to finish restoring.";return end
+ if self.fs.mode(self.savepath..".restore") then self.reading_error="Reabra o PokeK para concluir a restauração.";return end
  local pending=self.clock.pending
  local unlock,err=self.fs.lock(self.counterpath..".session")
  if not unlock then self.reading_error=err;return end
@@ -108,7 +108,7 @@ function PokePal:onFlushSettings() self:flushReading() end
 function PokePal:finishReadingScan(counters,status,visit)
  if counters then self.reading.saveCache() end
  local ko,err,primary,days=self.reading.counter(self.counterpath)
- self.reading_status={status,(err or self.reading_error) and "KOReader: could not save reading time" or "KOReader: automatic tracking on"}
+ self.reading_status={status,(err or self.reading_error) and "KOReader: não foi possível salvar o tempo de leitura" or "KOReader: registro automático ativo"}
  local message,recap=self.reading.collect(self.state,self.engine,counters,ko,os.time(),days,visit)
  if recap then self.recap=recap end
  return message
@@ -146,7 +146,7 @@ function PokePal:onPetClosed()
  self:resumeReading()
 end
 function PokePal:save()
- if self.backups and self.backups.blocked then return nil,"Reopen PokePal to finish restoring." end
+ if self.backups and self.backups.blocked then return nil,"Reabra o PokeK para concluir a restauração." end
  if self.savepath and self.state then
   local ok,err=self.storage.save(self.savepath,self.state,self.engine,ffiUtil.fsyncOpenedFile,ffiUtil.fsyncDirectory)
   self.save_error=not ok

@@ -51,7 +51,7 @@ test('library scan covers all five sidecar extensions and deduplicates copies an
  put(root..'/book1.sdr/profile.azw3f',fixture(120000))
  put(root..'/book1.sdr/ignored.azw3f.tmp',fixture(999000000))
  put(root..'/book1.sdr/bad.yjf','bad')
- local values,status=R.scan(root,F);assert(values and status:find('5 books',1,true))
+ local values,status=R.scan(root,F);assert(values and status:find('5 livros',1,true))
  assert(values[R.key('book1')]==120 and values[R.key('book5')]==300)
  assert(not R.scan(TESTDIR..'/missing',F))
 end)

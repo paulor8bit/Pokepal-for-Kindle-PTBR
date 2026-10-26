@@ -1,45 +1,46 @@
 -- PokePal game rules. Pure Lua 5.1; no device, network, or timer dependency.
 local E = {}
 local source=debug.getinfo(1,"S").source:sub(2):match("^(.*)/")
+E.labels = dofile(source.."/labels.lua")
 E.species = dofile(source.."/species.lua")
 E.companion = dofile(source.."/companion.lua")
 E.starters = {1,4,7,25,133,152,155,158}
 E.evolution_branches = {[133]={134,135,136}}
-E.evolution_stones = {[134]="Water stone",[135]="Thunder stone",[136]="Fire stone"}
+E.evolution_stones = {[134]="Pedra de Água",[135]="Pedra do Trovão",[136]="Pedra de Fogo"}
 -- Practice unlocks are PokePal rules, not a battle-game learnset.
 E.move_sets = {
- [1]={"Tackle","Vine Whip","Razor Leaf","Solar Beam"},
- [4]={"Scratch","Ember","Flame Burst","Flamethrower"},
- [7]={"Tackle","Water Gun","Bubble Beam","Hydro Pump"},
- [25]={"Thunder Shock","Quick Attack","Thunderbolt","Thunder"},
- [133]={"Tackle","Quick Attack","Bite","Swift"},
- [134]={"Tackle","Water Gun","Aurora Beam","Hydro Pump"},
- [135]={"Tackle","Thunder Shock","Thunderbolt","Thunder"},
- [136]={"Tackle","Ember","Fire Fang","Flamethrower"},
- [152]={"Tackle","Razor Leaf","Magical Leaf","Solar Beam"},
- [155]={"Tackle","Ember","Flame Wheel","Flamethrower"},
- [158]={"Scratch","Water Gun","Bite","Hydro Pump"},
+ [1]={"Investida","Chicote de Vinha","Folha Navalha","Raio Solar"},
+ [4]={"Arranhão","Brasa","Rajada de Chamas","Lança-chamas"},
+ [7]={"Investida","Jato de Água","Raio de Bolhas","Bomba d'Água"},
+ [25]={"Choque do Trovão","Ataque Rápido","Raio do Trovão","Trovão"},
+ [133]={"Investida","Ataque Rápido","Mordida","Estrelas Cadentes"},
+ [134]={"Investida","Jato de Água","Raio Aurora","Bomba d'Água"},
+ [135]={"Investida","Choque do Trovão","Raio do Trovão","Trovão"},
+ [136]={"Investida","Brasa","Presa de Fogo","Lança-chamas"},
+ [152]={"Investida","Folha Navalha","Folha Mágica","Raio Solar"},
+ [155]={"Investida","Brasa","Roda de Fogo","Lança-chamas"},
+ [158]={"Arranhão","Jato de Água","Mordida","Bomba d'Água"},
 }
 E.badge_goals={
- {"First friend","Begin your adventure"}, {"Kind heart","Care for your partner 20 times"},
- {"Trail scout","Complete 5 expeditions"}, {"Field researcher","Discover 10 Pokemon"},
- {"Best buddies","Reach 80 bond"}, {"Veteran","Earn 300 XP"},
- {"Bookworm","Read for 10 hours"}, {"A new arrival","Hatch an egg"},
- {"All three trails","Finish every trail"}, {"A place of our own","Place all four decorations"},
- {"Reading together","Remember a book"}, {"Finding a rhythm","Meet four weekly goals"},
- {"Favourite snack","Find a favourite berry"}, {"Kanto explorer","Meet all 151 Kanto Pokemon"},
+ {"First friend","Comece sua aventura"}, {"Kind heart","Cuide do seu parceiro 20 vezes"},
+ {"Trail scout","Conclua 5 expedições"}, {"Field researcher","Descubra 10 Pokémon"},
+ {"Best buddies","Alcance 80 de vínculo"}, {"Veteran","Ganhe 300 XP"},
+ {"Bookworm","Leia por 10 horas"}, {"A new arrival","Choque um ovo"},
+ {"All three trails","Conclua todas as trilhas"}, {"A place of our own","Coloque as quatro decorações"},
+ {"Reading together","Guarde a lembrança de um livro"}, {"Finding a rhythm","Cumpra quatro metas semanais"},
+ {"Favourite snack","Descubra uma fruta favorita"}, {"Kanto explorer","Conheça os 151 Pokémon de Kanto"},
 }
 E.routes = {
- {name="Meadow", seconds=1800, energy=12, berries=3, xp=12, pool={10,16,19,39,143}},
- {name="Coast", seconds=7200, energy=20, berries=5, xp=22, pool={54,129,131,147}},
- {name="Moon Cave", seconds=14400, energy=28, berries=8, xp=35, pool={35,41,74,147}},
+ {name="Pradaria", seconds=1800, energy=12, berries=3, xp=12, pool={10,16,19,39,143}},
+ {name="Litoral", seconds=7200, energy=20, berries=5, xp=22, pool={54,129,131,147}},
+ {name="Caverna Lunar", seconds=14400, energy=28, berries=8, xp=35, pool={35,41,74,147}},
 }
-E.backgrounds={"Meadow","Coast","Moon Cave","Forest","Snowfield","Reading nook"}
+E.backgrounds={"Pradaria","Litoral","Caverna Lunar","Floresta","Campo Nevado","Cantinho de Leitura"}
 E.egg_seconds=7200
 E.egg_cost=3
 E.weekly_targets={3600,7200,10800}
-E.decorations={{name="Cushion",cost=5},{name="Plant",cost=8},{name="Lamp",cost=10},{name="Bookshelf",cost=12}}
-E.discoveries={{name="Berry patch",detail="Find 1 berry"},{name="Footprints",detail="Follow a new trail for 3 XP"},{name="Campsite",detail="Rest for 8 energy"}}
+E.decorations={{name="Almofada",cost=5},{name="Planta",cost=8},{name="Luminária",cost=10},{name="Estante",cost=12}}
+E.discoveries={{name="Arbusto de frutas",detail="Encontre 1 fruta"},{name="Pegadas",detail="Siga uma nova trilha por 3 XP"},{name="Acampamento",detail="Descanse por 8 de energia"}}
 -- Keep old route IDs and durations so expeditions from older saves finish normally.
 for _,route in ipairs(E.routes) do route.pool={} end
 for id=1,160 do
@@ -53,7 +54,7 @@ function E.kantoCount(s)
 end
 local function clamp(n, lo, hi) return math.max(lo, math.min(hi,n)) end
 local function integer(n,max) return type(n)=="number" and n==n and n>=0 and n<=max and n%1==0 end
-function E.name(id) return E.species[id] and E.species[id][1] or "Egg" end
+function E.name(id) return E.species[id] and E.species[id][1] or "Ovo" end
 function E.displayName(s,id)
  id=id or s.species
  return s.nicknames and s.nicknames[tostring(id)] or E.name(id)
@@ -63,16 +64,16 @@ function E.validNickname(name)
 end
 function E.reaction(s)
  local name=E.displayName(s)
- if s.resting then return name..(s.decor and s.decor[1] and " is asleep on the cushion." or " is curled up for a nap.") end
- if s.food<40 then return name.." keeps looking at the berry basket." end
- if s.energy<20 then return name.." lets out a long yawn." end
- if s.dirt>70 then return name.." has tracked mud into the nest." end
- if s.joy<40 then return name.." nudges a ball toward you." end
- if s.decor and s.decor[2] and tonumber(os.date("%H"))%3==0 then return name.." is sniffing the plant." end
- if s.decor and s.decor[4] and tonumber(os.date("%H"))%3==1 then return name.." is looking through the bookshelf." end
- if s.bond>=80 then return name.." settles in beside you." end
- if s.bond>=30 then return name.." perks up when you come back." end
- return name.." looks happy to see you."
+ if s.resting then return name..(s.decor and s.decor[1] and " dorme na almofada." or " se aconchegou para uma soneca.") end
+ if s.food<40 then return name.." fica de olho na cesta de frutas." end
+ if s.energy<20 then return name.." solta um longo bocejo." end
+ if s.dirt>70 then return name.." trouxe lama para o ninho." end
+ if s.joy<40 then return name.." empurra uma bola até você." end
+ if s.decor and s.decor[2] and tonumber(os.date("%H"))%3==0 then return name.." está cheirando a planta." end
+ if s.decor and s.decor[4] and tonumber(os.date("%H"))%3==1 then return name.." está olhando a estante." end
+ if s.bond>=80 then return name.." se acomoda ao seu lado." end
+ if s.bond>=30 then return name.." se anima quando você volta." end
+ return name.." fica feliz em ver você."
 end
 function E.level(s) return math.min(100,1+math.floor(s.xp/20)) end
 function E.evolutionChoices(id)
@@ -93,27 +94,27 @@ function E.evolutionLine(id)
  return line
 end
 function E.mood(s,now)
- if s.trip>0 then return E.tripLeft(s,now)==0 and "Home from an adventure" or "Exploring the world" end
- if s.resting then return "Taking a nap" end
- if s.food<40 then return "A little hungry" end
- if s.energy<20 then return "Ready for a nap" end
- if s.dirt>70 then return "Could use a little clean" end
- if s.joy<40 then return "Would love to play" end
- if s.bond>=60 then return "Glad to see you" end
- return "Happy to be with you"
+ if s.trip>0 then return E.tripLeft(s,now)==0 and "De volta da aventura" or "Explorando o mundo" end
+ if s.resting then return "Tirando uma soneca" end
+ if s.food<40 then return "Com um pouco de fome" end
+ if s.energy<20 then return "Querendo uma soneca" end
+ if s.dirt>70 then return "Precisando de uma limpeza" end
+ if s.joy<40 then return "Querendo brincar" end
+ if s.bond>=60 then return "Feliz em ver você" end
+ return "Feliz por estar com você"
 end
 function E.moves(s)
  local root=E.evolutionLine(s.species)[1]
  local by_type={
-  Normal={"Tackle","Quick Attack","Swift","Take Down"}, Fire={"Scratch","Ember","Flame Wheel","Flamethrower"},
-  Water={"Tackle","Water Gun","Bubble Beam","Hydro Pump"}, Grass={"Tackle","Vine Whip","Razor Leaf","Solar Beam"},
-  Electric={"Thunder Shock","Quick Attack","Thunderbolt","Thunder"}, Ice={"Tackle","Icy Wind","Aurora Beam","Blizzard"},
-  Fighting={"Low Kick","Karate Chop","Brick Break","Close Combat"}, Poison={"Poison Sting","Acid","Sludge","Sludge Bomb"},
-  Ground={"Mud-Slap","Dig","Mud Shot","Earthquake"}, Flying={"Peck","Gust","Wing Attack","Air Slash"},
-  Psychic={"Confusion","Psybeam","Zen Headbutt","Psychic"}, Bug={"Bug Bite","String Shot","Pin Missile","Bug Buzz"},
-  Rock={"Rock Throw","Rollout","Rock Slide","Stone Edge"}, Ghost={"Lick","Night Shade","Shadow Punch","Shadow Ball"},
-  Dragon={"Twister","Dragon Breath","Dragon Claw","Dragon Pulse"}, Steel={"Metal Claw","Metal Sound","Iron Head","Flash Cannon"},
-  Fairy={"Disarming Voice","Fairy Wind","Draining Kiss","Moonblast"},
+  Normal={"Investida","Ataque Rápido","Estrelas Cadentes","Derrubada"}, Fire={"Arranhão","Brasa","Roda de Fogo","Lança-chamas"},
+  Water={"Investida","Jato de Água","Raio de Bolhas","Bomba d'Água"}, Grass={"Investida","Chicote de Vinha","Folha Navalha","Raio Solar"},
+  Electric={"Choque do Trovão","Ataque Rápido","Raio do Trovão","Trovão"}, Ice={"Investida","Vento Gelado","Raio Aurora","Nevasca"},
+  Fighting={"Chute Baixo","Golpe de Caratê","Quebra-tijolos","Combate Corpo a Corpo"}, Poison={"Ferrão Venenoso","Ácido","Lodo","Bomba de Lodo"},
+  Ground={"Tapa de Lama","Cavar","Tiro de Lama","Terremoto"}, Flying={"Bicada","Rajada","Ataque de Asa","Corte de Ar"},
+  Psychic={"Confusão","Raio Psíquico","Cabeçada Zen","Psíquico"}, Bug={"Picada de Inseto","Tiro de Seda","Míssil de Espinhos","Zumbido de Inseto"},
+  Rock={"Lançamento de Rocha","Rolagem","Deslizamento de Rochas","Gume de Pedra"}, Ghost={"Lambida","Sombra Noturna","Soco Sombrio","Bola Sombria"},
+  Dragon={"Tornado","Sopro do Dragão","Garra do Dragão","Pulso do Dragão"}, Steel={"Garra de Metal","Som Metálico","Cabeça de Ferro","Canhão de Luz"},
+  Fairy={"Voz Encantadora","Vento de Fada","Beijo Drenante","Explosão Lunar"},
  }
  local kind=E.species[s.species] and E.species[s.species].types:match("^%a+") or "Normal"
  local names=E.move_sets[s.species] or E.move_sets[root] or by_type[kind] or by_type.Normal
@@ -122,11 +123,11 @@ function E.moves(s)
  return moves
 end
 function E.canPlay(s,now)
- if s.species==0 then return false,"Choose your partner first." end
- if s.trip>0 then return false,"Your partner is exploring. Check the trail first." end
- if s.resting then return false,"Your partner is napping. Tap Wake up first." end
- if now-s.played<1800 then return false,"Play again in "..math.ceil((1800-now+s.played)/60).." min." end
- if s.energy<10 then return false,"Playing needs 10 energy. A little rest first." end
+ if s.species==0 then return false,"Escolha seu parceiro primeiro." end
+ if s.trip>0 then return false,"Seu parceiro está explorando. Veja a trilha primeiro." end
+ if s.resting then return false,"Seu parceiro está dormindo. Toque em Acordar primeiro." end
+ if now-s.played<1800 then return false,"Brinque de novo em "..math.ceil((1800-now+s.played)/60).." min." end
+ if s.energy<10 then return false,"Brincar exige 10 de energia. Descanse um pouco." end
  return true
 end
 function E.new(now)
@@ -212,7 +213,7 @@ function E.weekReward(s,now)
  local companion=E.companion.get(s);companion.goals=companion.goals+1
  local berries=math.min(5,999-s.berries);local xp=math.min(10,1e12-s.xp)
  s.berries=s.berries+berries;s.xp=s.xp+xp
- E.note(s,"Weekly goal met! +"..berries.." berries, +"..xp.." XP.",now)
+ E.note(s,"Meta semanal cumprida! +"..berries.." frutas, +"..xp.." XP.",now)
 end
 function E.tripLeft(s,now)
  if s.trip==0 then return 0 end
@@ -230,15 +231,15 @@ function E.discover(s,now)
  local events={}
  while s.finds<reached do
   s.finds=s.finds+1;local id=s.finds;local item=E.discoveries[id];local reward
-  if id==1 then local n=math.min(1,999-s.berries);s.berries=s.berries+n;reward="+"..n.." berry."
+  if id==1 then local n=math.min(1,999-s.berries);s.berries=s.berries+n;reward="+"..n.." fruta."
   elseif id==2 then local n=math.min(3,1e12-s.xp);s.xp=s.xp+n;reward="+"..n.." XP."
-  else local n=math.min(8,100-s.energy);s.energy=s.energy+n;reward="+"..math.floor(n).." energy." end
+  else local n=math.min(8,100-s.energy);s.energy=s.energy+n;reward="+"..math.floor(n).." de energia." end
   E.note(s,item.name..": "..reward,now);events[#events+1]=item.name
  end
  if #events>0 then E.badges(s,now);return events end
 end
 function E.note(s,text,now)
- if now then text=os.date("%d %b %H:%M",now).." | "..text end
+ if now then text=os.date("%d/%m %H:%M",now).." | "..text end
  table.insert(s.log,1,text)
  while #s.log>24 do table.remove(s.log) end
  return text
@@ -268,7 +269,7 @@ function E.badges(s,now)
   {"Trail scout",s.trips>=5},{"Field researcher",E.count(s.seen)>=10},
   {"Best buddies",s.bond>=80},{"Veteran",s.xp>=300} }
  for _,r in ipairs(rules) do
-  if r[2] and not s.badges[r[1]] then s.badges[r[1]]=true;E.note(s,"Badge earned: "..r[1].."!",now) end
+  if r[2] and not s.badges[r[1]] then s.badges[r[1]]=true;E.note(s,"Insígnia conquistada: "..E.labels.get(r[1]).."!",now) end
  end
 end
 function E.ready(s)
@@ -298,7 +299,7 @@ function E.readingReward(s,seconds,now)
   egg=s.egg~=nil,egg_before=egg_before,egg_after=s.egg and E.egg_seconds-E.eggLeft(s) or 0} or nil
  E.badges(s,now)
  if earned_berries==0 and earned_xp==0 then return nil,recap end
- local message="Reading: +"..earned_berries..(earned_berries==1 and " berry" or " berries")..", +"..earned_xp.." XP."
+ local message="Leitura: +"..earned_berries..(earned_berries==1 and " fruta" or " frutas")..", +"..earned_xp.." XP."
  E.note(s,message,now);E.badges(s,now);return message,recap
 end
 function E.act(s,action,arg,now)
@@ -309,55 +310,55 @@ function E.act(s,action,arg,now)
   E.note(s,msg,now); E.badges(s,now); return msg,anim
  end
  if action=="choose" and s.species==0 then
-  if not E.species[arg] then return "Choose a Pokemon from the list." end
+  if not E.species[arg] then return "Escolha um Pokémon da lista." end
   s.species=arg;s.seen[tostring(arg)]=true;s.gift=now;s.started=now
   E.companion.mark(s,arg,now)
   E.readingReward(s,0,now)
-  return done(E.name(arg).." is your new friend!","hello")
+  return done(E.name(arg).." é seu novo amigo!","hello")
  end
  if action=="animation" then
   if arg=="gentle" or arg=="eco" or arg=="off" then s.animation=arg end
-  return "Animation: "..s.animation
+  return "Animação: "..E.labels.get(s.animation)
  end
  if action=="background" then
   if E.backgrounds[arg] then s.background=arg;s.version=math.max(s.version,3) end
-  return "Background: "..E.backgrounds[s.background or 1]
+  return "Cenário: "..E.backgrounds[s.background or 1]
  end
- if s.species==0 then return "Choose your first partner." end
+ if s.species==0 then return "Escolha seu primeiro parceiro." end
  if action=="nickname" then
-  if type(arg)~="string" then return "Choose a nickname of up to 12 characters." end
+  if type(arg)~="string" then return "Escolha um apelido com até 12 caracteres." end
   local name=arg:gsub("^%s+",""):gsub("%s+$","")
-  if name~="" and not E.validNickname(name) then return "Use up to 12 characters, with no line breaks." end
+  if name~="" and not E.validNickname(name) then return "Use até 12 caracteres, sem quebras de linha." end
   s.nicknames=s.nicknames or {};s.nicknames[tostring(s.species)]=name~="" and name or nil;s.version=math.max(s.version,3)
-  return done(name~="" and "You named your partner "..name.."." or "Back to "..E.name(s.species)..".")
+  return done(name~="" and "Você chamou seu parceiro de "..name.."." or "De volta a "..E.name(s.species)..".")
  elseif action=="decorate" then
-  local item=E.decorations[arg];if not item then return "Choose something for your space." end
+  local item=E.decorations[arg];if not item then return "Escolha algo para seu cantinho." end
   s.decor=s.decor or {}
   if s.decor[arg]==nil then
-   if s.berries<item.cost then return "You need "..item.cost.." berries for the "..item.name:lower().."." end
+   if s.berries<item.cost then return "Você precisa de "..item.cost.." frutas para comprar: "..item.name:lower().."." end
    s.berries=s.berries-item.cost;s.decor[arg]=true;s.version=math.max(s.version,3)
-   return done("A new "..item.name:lower().." for your space.")
+   return done("Você comprou: "..item.name:lower().." para seu cantinho.")
   end
   s.decor[arg]=not s.decor[arg]
-  return s.decor[arg] and item.name.." placed." or item.name.." tucked away."
+  return s.decor[arg] and item.name.." colocado no cantinho." or item.name.." guardado."
  elseif action=="goal" then
-  if arg~=3600 and arg~=7200 and arg~=10800 then return "Choose 60, 120 or 180 minutes." end
+  if arg~=3600 and arg~=7200 and arg~=10800 then return "Escolha 60, 120 ou 180 minutos." end
   s.week=s.week or {start=E.weekStart(now),seconds=0,claimed=false};s.week.target=arg;s.version=math.max(s.version,3)
   E.weekReward(s,now)
-  return done("Weekly goal: "..arg/60 .." minutes. Pick up your book when you feel like it.")
+  return done("Meta semanal: "..arg/60 .." minutos. Leia quando tiver vontade.")
  elseif action=="check" then
-  if s.egg and E.eggLeft(s)==0 then return "Your egg is ready! Tap it to meet your new friend." end
-  if s.trip>0 and E.tripLeft(s,now)==0 then return "Your partner is back! Tap Explore to collect." end
-  if s.trip>0 then return E.displayName(s).." is exploring "..E.routes[s.trip].name.."." end
+  if s.egg and E.eggLeft(s)==0 then return "Seu ovo está pronto! Toque nele para conhecer seu novo amigo." end
+  if s.trip>0 and E.tripLeft(s,now)==0 then return "Seu parceiro voltou! Toque em Explorar para recolher." end
+  if s.trip>0 then return E.displayName(s).." está explorando: "..E.routes[s.trip].name.."." end
   return E.reaction(s)
  elseif action=="gift" then
-  if now-s.gift<86400 then return "The berry basket refills every 24 hours." end
+  if now-s.gift<86400 then return "A cesta de frutas é reabastecida a cada 24 horas." end
   s.gift=now;s.berries=math.min(999,s.berries+5)
-  return done("The berry basket has 5 fresh berries!","feed")
+  return done("A cesta tem 5 frutas fresquinhas!","feed")
  elseif action=="egg" then
-  if s.egg then return "You already have an egg to look after." end
-  if not s.reading or not s.reading.enabled then return "Turn on reading rewards to raise an egg." end
-  if s.berries<E.egg_cost then return "An egg costs "..E.egg_cost.." berries." end
+  if s.egg then return "Você já tem um ovo para cuidar." end
+  if not s.reading or not s.reading.enabled then return "Ative as recompensas de leitura para cuidar de um ovo." end
+  if s.berries<E.egg_cost then return "Um ovo custa "..E.egg_cost.." frutas." end
   local pool,all={},{}
   for id=1,160 do
    if not parentOf(id) then
@@ -366,18 +367,18 @@ function E.act(s,action,arg,now)
   end
   if #pool==0 then pool=all end
   s.egg={id=pool[rng(s,#pool)],start=s.reading.seconds};s.version=math.max(s.version,3);s.berries=s.berries-E.egg_cost
-  return done("An egg for your next chapters. Read for 120 minutes to hatch it.")
+  return done("Um ovo para seus próximos capítulos. Leia por 120 minutos para chocá-lo.")
  elseif action=="hatch" then
-  if not s.egg then return "Pick up an egg first." end
-  if E.eggLeft(s)>0 then return "Your egg needs "..math.ceil(E.eggLeft(s)/60).." more reading minutes." end
+  if not s.egg then return "Pegue um ovo primeiro." end
+  if E.eggLeft(s)>0 then return "Seu ovo precisa de mais "..math.ceil(E.eggLeft(s)/60).." minutos de leitura." end
   local id=s.egg.id;s.seen[tostring(id)]=true;s.egg=nil
   E.companion.mark(s,id,now);local c=E.companion.get(s);c.hatches=c.hatches+1
-  return done(E.name(id).." hatched! Find your new friend in the journal.")
+  return done(E.name(id).." saiu do ovo! Encontre seu novo amigo no diário.")
  elseif action=="collect" then
-  if s.trip==0 then return "Pick a trail to explore." end
+  if s.trip==0 then return "Escolha uma trilha para explorar." end
   local left=E.tripLeft(s,now)
-  if left>0 then return s.trail~=nil and "Read for "..math.ceil(left/60).." more minutes to finish this trail."
-   or "Still exploring. Come back in "..math.ceil(left/60).." min." end
+  if left>0 then return s.trail~=nil and "Leia por mais "..math.ceil(left/60).." minutos para concluir a trilha."
+   or "Ainda explorando. Volte em "..math.ceil(left/60).." min." end
   local r=E.routes[s.trip];local pool={}
   for _,id in ipairs(r.pool) do if not s.seen[tostring(id)] then pool[#pool+1]=id end end
   if #pool==0 then pool=r.pool end
@@ -386,68 +387,68 @@ function E.act(s,action,arg,now)
   s.berries=math.min(999,s.berries+r.berries);s.xp=s.xp+r.xp;s.bond=clamp(s.bond+4,0,100)
   E.companion.mark(s,id,now);local story=E.companion.finishTrip(s,E)
   s.trips=s.trips+1;s.trip=0;s.due=0;s.trail=nil;s.finds=nil
-  return done((fresh and "New: " or "Met ")..E.name(id).."! +"..r.berries.." berries, +"..r.xp.." XP."..(story or ""),"explore")
+  return done((fresh and "Novo: " or "Encontrou: ")..E.name(id).."! +"..r.berries.." frutas, +"..r.xp.." XP."..(story or ""),"explore")
  end
- if s.trip>0 then return "Your partner is exploring. Tap Explore for details." end
+ if s.trip>0 then return "Seu parceiro está explorando. Toque em Explorar para saber mais." end
  if action=="rest" then
   s.resting=not s.resting
-  return done(s.resting and "Nap time! Rest continues while you read." or "Awake and ready for a little adventure.","rest")
+  return done(s.resting and "Hora da soneca! O descanso continua enquanto você lê." or "Acordado e pronto para uma aventura.","rest")
  end
- if s.resting then return "Your partner is napping. Tap Wake up first." end
+ if s.resting then return "Seu parceiro está dormindo. Toque em Acordar primeiro." end
  if action=="partner" then
-  if not E.species[arg] then return "Choose a Pokemon from the list." end
-  if arg==s.species then return E.name(arg).." is already with you." end
+  if not E.species[arg] then return "Escolha um Pokémon da lista." end
+  if arg==s.species then return E.name(arg).." já está com você." end
   s.partners=s.partners or {};s.partners[tostring(s.species)]={xp=s.xp,bond=s.bond}
   local p=s.partners[tostring(arg)] or {xp=0,bond=0}
   s.species=arg;s.xp=p.xp;s.bond=p.bond;s.seen[tostring(arg)]=true
   E.companion.mark(s,arg,now)
-  return done(E.name(arg).." joins you. Your other friends keep their progress.","hello")
+  return done(E.name(arg).." se juntou a você. Seus outros amigos mantêm o progresso.","hello")
  elseif action=="feed" then
-  if s.berries<1 then return "No berries. Explore or check the berry basket." end
-  if s.food>=95 then return "Already full! Save that berry for later." end
+  if s.berries<1 then return "Sem frutas. Explore ou confira a cesta." end
+  if s.food>=95 then return "Barriguinha cheia! Guarde essa fruta para depois." end
   s.berries=s.berries-1;s.food=clamp(s.food+24,0,100);s.bond=clamp(s.bond+2,0,100);s.care=s.care+1
   local _,favourite=E.companion.profile(s,s.species,E)
   if arg==favourite then
    E.companion.get(s).tastes[tostring(s.species)]=true;s.bond=clamp(s.bond+1,0,100)
-   return done(E.displayName(s).." perks up. "..favourite.." is a favourite!","feed")
+   return done(E.displayName(s).." se animou. "..favourite.." é uma das favoritas!","feed")
   end
-  return done("Berry eaten.","feed")
+  return done("Fruta comida.","feed")
  elseif action=="play" then
   local allowed,why=E.canPlay(s,now);if not allowed then return why end
   local perfect=arg=="perfect"
   s.played=now;s.energy=s.energy-10;s.joy=clamp(s.joy+20,0,100);s.bond=clamp(s.bond+4,0,100);s.xp=s.xp+5;s.care=s.care+1
   if perfect then s.xp=s.xp+3 end
-  return done(perfect and "Perfect berry trail! +8 XP, +4 bond." or "Good try. +5 XP, +4 bond.","play")
+  return done(perfect and "Trilha perfeita! +8 XP, +4 de vínculo." or "Boa tentativa! +5 XP, +4 de vínculo.","play")
  elseif action=="train" then
-  if now-s.trained<3600 then return "Training ready in "..math.ceil((3600-now+s.trained)/60).." min." end
-  if s.energy<18 or s.food<30 then return "Training needs 18 energy and 30 fullness." end
+  if now-s.trained<3600 then return "Treino disponível em "..math.ceil((3600-now+s.trained)/60).." min." end
+  if s.energy<18 or s.food<30 then return "Treinar exige 18 de energia e 30 de saciedade." end
   local move=arg or E.moves(s)[1].name;local unlocked=false
   for _,m in ipairs(E.moves(s)) do if m.name==move and E.level(s)>=m.level then unlocked=true end end
-  if not unlocked then return "That move is not ready yet. Keep growing together." end
+  if not unlocked then return "Esse golpe ainda não está disponível. Continuem crescendo juntos." end
   s.trained=now;s.energy=s.energy-18;s.food=s.food-8;s.xp=s.xp+12;s.bond=clamp(s.bond+2,0,100)
-  return done(move.." practice! +12 XP, +2 bond.","train")
+  return done(move.." em treino! +12 XP, +2 de vínculo.","train")
  elseif action=="clean" then
-  if s.dirt<15 then return "Already squeaky clean." end
+  if s.dirt<15 then return "Já está tudo limpinho." end
   s.dirt=0;s.joy=clamp(s.joy+8,0,100);s.bond=clamp(s.bond+2,0,100);s.care=s.care+1;s.cleaned=now
-  return done("Nest cleaned.","clean")
+  return done("Ninho limpo.","clean")
  elseif action=="trip" or action=="readingtrip" then
-  local r=E.routes[arg];if not r then return "Choose a trail." end
-  if action=="readingtrip" and (not s.reading or not s.reading.enabled) then return "Turn on reading rewards to start a reading trail." end
-  if s.energy<r.energy then return "This trail needs "..r.energy.." energy." end
-  if s.food<30 then return "Feed your partner before setting off." end
+  local r=E.routes[arg];if not r then return "Escolha uma trilha." end
+  if action=="readingtrip" and (not s.reading or not s.reading.enabled) then return "Ative as recompensas de leitura para iniciar uma trilha de leitura." end
+  if s.energy<r.energy then return "Esta trilha exige "..r.energy.." de energia." end
+  if s.food<30 then return "Alimente seu parceiro antes de partir." end
   s.energy=s.energy-r.energy;s.trip=arg;s.due=now+r.seconds;s.finds=0;s.version=math.max(s.version,3)
   E.companion.get(s).journey={event=rng(s,#E.companion.events)}
   if action=="readingtrip" then
    s.trail=s.reading.seconds;s.due=0;s.version=math.max(s.version,3)
-   return done("Off to "..r.name.."! Read for "..r.seconds/60 .." minutes to finish.","explore")
+   return done("Partiu: "..r.name.."! Leia por "..r.seconds/60 .." minutos para concluir.","explore")
   end
-  return done("Off to "..r.name.."! Return in "..r.seconds/60 .." min.","explore")
+  return done("Partiu: "..r.name.."! Volte em "..r.seconds/60 .." min.","explore")
  elseif action=="evolve" then
-  if not E.ready(s) then return "Evolution needs enough XP and at least 30 bond." end
+  if not E.ready(s) then return "Evoluir exige XP suficiente e ao menos 30 de vínculo." end
   local choices=E.evolutionChoices(s.species)
   local id=arg or (#choices==1 and choices[1]);local allowed=false
   for _,choice in ipairs(choices) do if choice==id then allowed=true end end
-  if not allowed then return "Choose an evolution from your partner's profile." end
+  if not allowed then return "Escolha uma evolução no perfil do parceiro." end
   s.partners=s.partners or {};s.partners[tostring(s.species)]={xp=s.xp,bond=s.bond}
   local previous=s.partners[tostring(id)]
   if previous then s.xp=math.max(s.xp,previous.xp);s.bond=math.max(s.bond,previous.bond) end
@@ -456,8 +457,8 @@ function E.act(s,action,arg,now)
   end
   s.species=id;s.seen[tostring(id)]=true
   E.companion.mark(s,id,now)
-  return done("Your partner evolved into "..E.name(id).."!","evolve")
+  return done("Seu parceiro evoluiu para "..E.name(id).."!","evolve")
  end
- return "Ready when you are."
+ return "Tudo pronto quando você quiser."
 end
 return E

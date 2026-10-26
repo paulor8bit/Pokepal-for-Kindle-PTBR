@@ -29,7 +29,7 @@ function F.list(path)
   local result={}
   for name in lfs.dir(path) do
    if name~="." and name~=".." then result[#result+1]=name end
-   if #result>20000 then error("Directory too large") end
+   if #result>20000 then error("Diretório muito grande") end
   end
   return result
  end)
@@ -42,20 +42,20 @@ function F.pid()
 end
 function F.lock(path)
  local pid=F.pid()
- if not pid then return nil,"Could not lock the save." end
+ if not pid then return nil,"Não foi possível bloquear o save." end
  if not F.mkdir(path) then
   local f=io.open(path.."/pid","r");local previous=f and f:read(32);if f then f:close() end
   local valid=previous and previous:match("^%d+$")
   local modified=F.mtime(path)
   if (valid and not F.mode("/proc/"..previous)) or (not valid and modified and os.time()-modified>60) then
    os.remove(path.."/pid");F.rmdir(path)
-   if not F.mkdir(path) then return nil,"PokePal is already open." end
-  else return nil,"PokePal is already open. Close the other copy first." end
+   if not F.mkdir(path) then return nil,"O PokeK já está aberto." end
+  else return nil,"O PokeK já está aberto. Feche a outra cópia primeiro." end
  end
  local f=io.open(path.."/pid","w")
- if not f then F.rmdir(path);return nil,"Could not write the save lock." end
+ if not f then F.rmdir(path);return nil,"Não foi possível gravar o bloqueio do save." end
  local written=f:write(tostring(pid));local closed=f:close()
- if not written or not closed then os.remove(path.."/pid");F.rmdir(path);return nil,"Could not write the save lock." end
+ if not written or not closed then os.remove(path.."/pid");F.rmdir(path);return nil,"Não foi possível gravar o bloqueio do save." end
  return function() os.remove(path.."/pid");F.rmdir(path) end
 end
 return F

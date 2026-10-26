@@ -28,7 +28,7 @@ def main():
    actual=subprocess.check_output(['git','rev-parse','HEAD'],cwd=path,text=True).strip()
    if actual!=revision:run('git','checkout',revision,cwd=path)
   else:
-   assert (path/'POKEPAL_REVISION.txt').read_text().strip()==revision,'Wrong dependency source revision'
+   assert (path/'POKEPAL_REVISION.txt').read_text(encoding="utf-8").strip()==revision,'Wrong dependency source revision'
  if (deps/'FBInk/.git').exists():run('git','submodule','update','--init','stb',cwd=deps/'FBInk')
  fb=deps/'FBInk';lua=deps/'lua'
  out=ROOT/'native'/'build';out.mkdir(exist_ok=True)

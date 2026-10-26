@@ -4,11 +4,11 @@ cd "$(dirname "$0")" || exit 1
 mkdir -p data || exit 1
 exec >>data/launch.log 2>&1
 if [ ! -x ./pokepal ]; then
-    eips 1 2 "PokePal executable missing. Copy the whole extension folder."
+    eips 1 2 "PokeK: executavel ausente. Copie a pasta completa."
     exit 1
 fi
 if ! command -v lipc-wait-event >/dev/null 2>&1; then
-    eips 1 2 "PokePal needs Kindle power events. See data/launch.log."
+    eips 1 2 "PokeK requer eventos de energia. Veja data/launch.log."
     exit 1
 fi
 # A second tap must not resume the first app's window manager on exit.
@@ -63,5 +63,5 @@ else
 fi
 if [ "$result" -eq 10 ]; then exit 0; fi
 if [ "$result" -eq 0 ]; then lipc-set-prop com.lab126.appmgrd start app://com.lab126.booklet.home 2>/dev/null; fi
-if [ "$result" -ne 0 ]; then eips 1 2 "PokePal could not start. Check extensions/pokepal/data/launch.log."; fi
+if [ "$result" -ne 0 ]; then eips 1 2 "PokeK nao iniciou. Veja extensions/pokepal/data/launch.log."; fi
 exit "$result"

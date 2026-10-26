@@ -137,15 +137,15 @@ function R.scan(root,fs,yield_step)
   end
  end
  local success=pcall(walk,root,0,nil)
- if not success then return nil,"Kindle: reading data unavailable" end
- return counters,books>0 and ("Kindle: "..books.." book"..(books==1 and "" or "s").." detected")
-  or (skipped>0 and "Kindle: no supported timing records" or "Kindle: read a book to get started")
+ if not success then return nil,"Kindle: dados de leitura indisponíveis" end
+ return counters,books>0 and ("Kindle: "..books.." livro"..(books==1 and "" or "s")..(books==1 and " detectado" or " detectados"))
+  or (skipped>0 and "Kindle: sem registros de tempo compatíveis" or "Kindle: leia um livro para começar")
 end
 function R.scanAsync(root,fs)
  local thread=coroutine.create(function() return R.scan(root,fs,function() coroutine.yield() end) end)
  return function()
   local ok,counters,status=coroutine.resume(thread)
-  if not ok then return true,nil,"Kindle: reading data unavailable" end
+  if not ok then return true,nil,"Kindle: dados de leitura indisponíveis" end
   return coroutine.status(thread)=="dead",counters,status
  end
 end
@@ -227,12 +227,12 @@ function R.counter(path)
  end
  local n,exists,days=read(path);if n then return n,nil,true,days end
  local backup,old,previous=read(path..".old");if backup then return backup,nil,false,previous end
- if exists or old then return nil,"Reading counter is unreadable." end
+ if exists or old then return nil,"Contador de leitura ilegível." end
  return 0,nil,false,{}
 end
 function R.saveCounter(path,n,syncfile,syncdir,days)
- if not integer(n,1e12) then return nil,"Invalid reading counter." end
- if days and not R.validDays(days,n) then return nil,"Invalid reading dates." end
+ if not integer(n,1e12) then return nil,"Contador de leitura inválido." end
+ if days and not R.validDays(days,n) then return nil,"Datas de leitura inválidas." end
  local data="POKEPAL_READING_"..(days and "2" or "1").."\n"..string.format("%.0f",n).."\n"
  if days then local ks={};for day in pairs(days) do ks[#ks+1]=day end;table.sort(ks)
   for _,day in ipairs(ks) do data=data..day.."="..string.format("%.0f",days[day]).."\n" end
